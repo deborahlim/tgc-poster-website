@@ -1,0 +1,9 @@
+{
+    "dev": {
+      "driver": "mysql",
+      "user": "deb",
+      "password":"lim",
+      "database":"poster_shop"
+    }
+  }
+  
