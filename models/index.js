@@ -4,6 +4,28 @@ const bookshelf = require("../bookshelf");
 // Create new poster model and stores it in the Poster object
 const Poster = bookshelf.model("Poster", {
   tableName: "posters",
+  mediaProperty() {
+    // argument is the name of the model
+    // the Poster model belongs to one MediaProperty Model
+    return this.belongsTo("MediaProperty");
+  },
+  tags() {
+    return this.belongsToMany("Tag");
+  },
 });
 
-module.exports = { Poster };
+const MediaProperty = bookshelf.model("MediaProperty", {
+  tableName: "media_properties",
+  poster() {
+    return this.hasMany("Poster");
+  },
+});
+
+const Tag = bookshelf.model("Tag", {
+  tableName: "tags",
+  posters() {
+    return belongsToMany("Poster");
+  },
+});
+
+module.exports = { Poster, MediaProperty, Tag };
