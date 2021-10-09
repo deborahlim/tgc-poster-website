@@ -28,4 +28,8 @@ const Tag = bookshelf.model("Tag", {
   },
 });
 
-module.exports = { Poster, MediaProperty, Tag };
+const User = bookshelf.model("User", {
+  tableName: "users",
+});
+
+module.exports = { Poster, MediaProperty, Tag, User };

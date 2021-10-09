@@ -5,6 +5,40 @@ const fields = forms.fields;
 const validators = forms.validators;
 const widgets = forms.widgets;
 
+const createRegistrationForm = () => {
+  return forms.create({
+    username: fields.string({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    email: fields.string({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    password: fields.password({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    confirm_password: fields.password({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.matchField("password")],
+    }),
+  });
+};
+
 // helper function to format forms to use css classes from Bootstrap
 var bootstrapField = function (name, object) {
   if (!Array.isArray(object.widget.classes)) {
@@ -106,4 +140,28 @@ const createPosterForm = (mediaProperties, tags) => {
   });
 };
 
-module.exports = { createPosterForm, bootstrapField };
+const createLoginForm = () => {
+  return forms.create({
+    email: fields.string({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    password: fields.password({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      widget: widgets.password(),
+    }),
+  });
+};
+module.exports = {
+  createPosterForm,
+  bootstrapField,
+  createRegistrationForm,
+  createLoginForm,
+};

@@ -1,7 +1,7 @@
 const express = require("express");
 const { bootstrapField, createPosterForm } = require("../forms");
 const router = express.Router();
-
+const { checkIfAuthenticated } = require("../middlewares");
 // #1 import in the Poster model
 const { Poster, MediaProperty, Tag } = require("../models");
 
@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.get("/create", async (req, res) => {
+router.get("/create", checkIfAuthenticated, async (req, res) => {
   const allMediaProperties = await MediaProperty.fetchAll().map((property) => {
     return [property.get("id"), property.get("name")];
   });
@@ -36,7 +36,7 @@ router.get("/create", async (req, res) => {
   });
 });
 
-router.post("/create", async (req, res) => {
+router.post("/create", checkIfAuthenticated, async (req, res) => {
   // 1. Read in all the Properties
   const allMediaProperties = await MediaProperty.fetchAll().map((property) => {
     return [property.get("id"), property.get("name")];
@@ -72,12 +72,17 @@ router.post("/create", async (req, res) => {
         // caolan forms will return tags as "1, 2, 3"
         await poster.tags().attach(tags.split(","));
       }
+      req.flash(
+        "success_messages",
+        `New Poster ${poster.get("title")} has been created`
+      );
       res.redirect("/poster");
     },
     error: async (form) => {
       res.render("posters/create", {
         form: form.toHTML(bootstrapField),
       });
+      res.flash("error_messages", "Error creating the poster");
     },
   });
 });
