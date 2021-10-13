@@ -2,7 +2,8 @@
   {{#block "content"}}
     <h1>Deleting {{poster.title}}</h1>
     <form method="POST">
-      <div class="alert alert-dang">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+      <div class="alert alert-danger">
         <p>Are you sure you want to delete {{poster.title}}?</p>
         <input type="submit" class="btn btn-danger" value="Yes" />
         <a href="/poster" class="btn btn-success">No</a>

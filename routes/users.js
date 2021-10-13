@@ -1,8 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
-const express = require("express");
-const router = express.Router();
 const crypto = require("crypto");
 
 const getHashedPassword = (password) => {
@@ -45,7 +42,7 @@ router.post("/register", (req, res) => {
       res.render("users/register", {
         form: registerForm.toHTML(bootstrapField),
       });
-      res.flash("error_messages", "Error signing up");
+      req.flash("error_messages", "Error signing up");
     },
   });
 });
@@ -75,7 +72,6 @@ router.post("/login", (req, res) => {
         );
       } else {
         if (user.get("password") === getHashedPassword(form.data.password)) {
-          console.log(req);
           req.session.user = {
             id: user.get("id"),
             username: user.get("username"),
@@ -85,6 +81,7 @@ router.post("/login", (req, res) => {
             "success_messages",
             "Welcome back, " + user.get("username")
           );
+          console.log("LOGIN REQUEST = ", req.session);
           res.redirect("/users/profile");
         } else {
           req.flash(
@@ -109,7 +106,7 @@ router.post("/login", (req, res) => {
 
 router.get("/profile", (req, res) => {
   const user = req.session.user;
-  console.log(user);
+  console.log("USER = ", user);
   if (!user) {
     req.flash("error_messages", "You do not have permission to view this page");
     res.redirect("/users/login");

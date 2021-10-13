@@ -30,9 +30,17 @@ router.get("/create", checkIfAuthenticated, async (req, res) => {
     return [tag.get("id"), tag.get("name")];
   });
   const posterForm = createPosterForm(allMediaProperties, allTags);
+  console.log(
+    process.env.CLOUDINARY_NAME,
+    process.env.CLOUDINARY_API_KEY,
+    process.env.CLOUDINARY_UPLOAD_PRESET
+  );
   res.render("posters/create", {
     // convert the form to it's HTML equivalent, using the bootstrapField function to format it using Bootstrap styles
     form: posterForm.toHTML(bootstrapField),
+    cloudinaryName: process.env.CLOUDINARY_NAME,
+    cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+    cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
   });
 });
 
