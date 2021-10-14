@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
       return [mediaProperty.get("id"), mediaProperty.get("name")];
     }
   );
-
+  // console.log(allMediaProperties);
   // add --- to represent no categories chosen, [] as caolan form needs array of array format
   allMediaProperties.unshift([0, "----"]);
 
@@ -41,17 +41,17 @@ router.get("/", async (req, res) => {
   ).map((tag) => {
     return [tag.get("id"), tag.get("name")];
   });
-
+  // console.log(allTags);
   let searchForm = createSearchForm(allMediaProperties, allTags);
   // query builder that means SELECT * from posters. we can continue to add clauses to a query builder until we execute it with a fetch function call
-  let query = Poster.collection();
+  let q = Poster.collection();
   searchForm.handle(req, {
     empty: async (form) => {
       // when empty fetch and display all posters
-      let posters = query.fetch({
-        withRelated: ["mediaProperty"],
+      let posters = await q.fetch({
+        withRelated: ["mediaProperty", "tags"],
       });
-
+      console.log(posters.toJSON());
       res.render("posters/index", {
         posters: posters.toJSON(),
         form: form.toHTML(bootstrapField),
@@ -59,8 +59,8 @@ router.get("/", async (req, res) => {
     },
     error: async (form) => {
       // when empty fetch and display all posters
-      let posters = query.fetch({
-        withRelated: ["mediaProperty"],
+      let posters = await q.fetch({
+        withRelated: ["mediaProperty", "tags"],
       });
 
       res.render("posters/index", {
@@ -69,13 +69,32 @@ router.get("/", async (req, res) => {
       });
     },
     success: async (form) => {
-      if(form.data.name) {
-        query =query.where
+      console.log(req.query);
+      console.log(form.data);
+      if (form.data.title) {
+        q = q.where("title", "like", "%" + req.query.title + "%");
       }
 
-      let posters = query.fetch({
-        withRelated: ["mediaProperty"]
-      })
+      if (form.data.media_property_id && form.data.media_property_id !== "0") {
+        q = q
+          .query(
+            "join",
+            "media_properties",
+            "media_property_id",
+            "media_properties.id"
+          )
+          .where("media_properties.id", "=", req.query.media_property_id);
+      }
+
+      if (form.data.tags) {
+        q = q
+          .query("join", "posters_tags", "posters.id", "poster_id")
+          .where("tag_id", "in", form.data.tags.split(","));
+      }
+
+      let posters = await q.fetch({
+        withRelated: ["mediaProperty"],
+      });
       res.render("posters/index", {
         posters: posters.toJSON(),
         form: form.toHTML(bootstrapField),

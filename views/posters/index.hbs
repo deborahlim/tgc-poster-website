@@ -3,6 +3,10 @@
   {{#block "content"}}
     <h1>All Posters</h1>
     <a class="btn btn-primary" href="poster/create">Create New</a>
+    <form method="GET">
+      {{{form}}}
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
     <table class="table">
       <thead>
         <tr>
