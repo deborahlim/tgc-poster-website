@@ -1,23 +1,86 @@
 const express = require("express");
-const { bootstrapField, createPosterForm } = require("../forms");
+const {
+  bootstrapField,
+  createPosterForm,
+  createSearchForm,
+} = require("../forms");
 const router = express.Router();
 const { checkIfAuthenticated } = require("../middlewares");
 // #1 import in the Poster model
 const { Poster, MediaProperty, Tag } = require("../models");
 
+// router.get("/", async (req, res) => {
+//   // #2 - fetch all the posters (ie, SELECT * from posters)
+//   // Collections are ordered sets of models returned from the database
+//   // Model.collection([models], [options]) is a static helper to instantiate a new collection, sets the model it's called on as the collection's target model
+//   // collection.fetch fethes the default set of models for this collection from the database, resetting the collection when they arrive
+//   let posters = await Poster.collection().fetch({
+//     // The withRelated key allows us to specify the name of the relationship on the model to load.
+//     // In this case, we want to load the Property relationship.
+//     // The name of the relationship is the name of the function that returns a relationship in the model
+//     withRelated: ["mediaProperty", "tags"],
+//   });
+//   res.render("posters/index", {
+//     posters: posters.toJSON(), // #3 - convert collection to JSON
+//   });
+// });
+
 router.get("/", async (req, res) => {
-  // #2 - fetch all the posters (ie, SELECT * from posters)
-  // Collections are ordered sets of models returned from the database
-  // Model.collection([models], [options]) is a static helper to instantiate a new collection, sets the model it's called on as the collection's target model
-  // collection.fetch fethes the default set of models for this collection from the database, resetting the collection when they arrive
-  let posters = await Poster.collection().fetch({
-    // The withRelated key allows us to specify the name of the relationship on the model to load.
-    // In this case, we want to load the Property relationship.
-    // The name of the relationship is the name of the function that returns a relationship in the model
-    withRelated: ["mediaProperty", "tags"],
+  // 1. get all the media properties
+  const allMediaProperties = await MediaProperty.fetchAll().map(
+    (mediaProperty) => {
+      return [mediaProperty.get("id"), mediaProperty.get("name")];
+    }
+  );
+
+  // add --- to represent no categories chosen, [] as caolan form needs array of array format
+  allMediaProperties.unshift([0, "----"]);
+
+  const allTags = await (
+    await Tag.fetchAll()
+  ).map((tag) => {
+    return [tag.get("id"), tag.get("name")];
   });
-  res.render("posters/index", {
-    posters: posters.toJSON(), // #3 - convert collection to JSON
+
+  let searchForm = createSearchForm(allMediaProperties, allTags);
+  // query builder that means SELECT * from posters. we can continue to add clauses to a query builder until we execute it with a fetch function call
+  let query = Poster.collection();
+  searchForm.handle(req, {
+    empty: async (form) => {
+      // when empty fetch and display all posters
+      let posters = query.fetch({
+        withRelated: ["mediaProperty"],
+      });
+
+      res.render("posters/index", {
+        posters: posters.toJSON(),
+        form: form.toHTML(bootstrapField),
+      });
+    },
+    error: async (form) => {
+      // when empty fetch and display all posters
+      let posters = query.fetch({
+        withRelated: ["mediaProperty"],
+      });
+
+      res.render("posters/index", {
+        posters: posters.toJSON(),
+        form: form.toHTML(bootstrapField),
+      });
+    },
+    success: async (form) => {
+      if(form.data.name) {
+        query =query.where
+      }
+
+      let posters = query.fetch({
+        withRelated: ["mediaProperty"]
+      })
+      res.render("posters/index", {
+        posters: posters.toJSON(),
+        form: form.toHTML(bootstrapField),
+      });
+    },
   });
 });
 

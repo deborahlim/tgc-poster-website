@@ -162,9 +162,88 @@ const createLoginForm = () => {
     }),
   });
 };
+const createSearchForm = (mediaProperties, tags) => {
+  return forms.create({
+    title: fields.string({
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    cost: fields.string({
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.integer()],
+    }),
+    description: fields.string({
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    date: fields.date({
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      widget: widgets.date(),
+    }),
+    stock: fields.number({
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    height: fields.number({
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    width: fields.number({
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    media_property_id: fields.string({
+      label: "Media Property",
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      widget: widgets.select(),
+      choices: mediaProperties,
+    }),
+    tags: fields.string({
+      required: false,
+      errorAfterField: true,
+      label: "Tags",
+      cssClasses: {
+        label: ["form-label"],
+      },
+      widget: widgets.multipleSelect(),
+      choices: tags,
+    }),
+    image_url: fields.string({
+      widget: widgets.hidden(),
+    }),
+  });
+};
 module.exports = {
   createPosterForm,
   bootstrapField,
   createRegistrationForm,
   createLoginForm,
+  createSearchForm,
 };
