@@ -8,6 +8,7 @@ const router = express.Router();
 const { checkIfAuthenticated } = require("../middlewares");
 // #1 import in the Poster model
 const { Poster, MediaProperty, Tag } = require("../models");
+const dataLayer = require("../dal/posters");
 
 // router.get("/", async (req, res) => {
 //   // #2 - fetch all the posters (ie, SELECT * from posters)

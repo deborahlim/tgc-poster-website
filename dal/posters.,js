@@ -1,0 +1,23 @@
+const {Poster, MediaProperty, Tag} = require("../models");
+
+const getAll = async () => {
+    await
+}
+
+const getMediaProperties = async () => {
+MediaProperty.fetchAll().map(
+    (mediaProperty) => {
+      return [mediaProperty.get("id"), mediaProperty.get("name")];
+    }
+  );
+}
+
+const addPoster = async () => {
+
+}
+
+const findPoster = async () => {
+
+}
+
+module.exports = {getAll, getMediaProperties, addPoster, findPoster};
