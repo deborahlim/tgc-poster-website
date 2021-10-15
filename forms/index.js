@@ -171,50 +171,6 @@ const createSearchForm = (mediaProperties, tags) => {
         label: ["form-label"],
       },
     }),
-    cost: fields.string({
-      required: false,
-      errorAfterField: true,
-      cssClasses: {
-        label: ["form-label"],
-      },
-      validators: [validators.integer()],
-    }),
-    description: fields.string({
-      required: false,
-      errorAfterField: true,
-      cssClasses: {
-        label: ["form-label"],
-      },
-    }),
-    date: fields.date({
-      required: false,
-      errorAfterField: true,
-      cssClasses: {
-        label: ["form-label"],
-      },
-      widget: widgets.date(),
-    }),
-    stock: fields.number({
-      required: false,
-      errorAfterField: true,
-      cssClasses: {
-        label: ["form-label"],
-      },
-    }),
-    height: fields.number({
-      required: false,
-      errorAfterField: true,
-      cssClasses: {
-        label: ["form-label"],
-      },
-    }),
-    width: fields.number({
-      required: false,
-      errorAfterField: true,
-      cssClasses: {
-        label: ["form-label"],
-      },
-    }),
     media_property_id: fields.string({
       label: "Media Property",
       required: false,
@@ -235,8 +191,29 @@ const createSearchForm = (mediaProperties, tags) => {
       widget: widgets.multipleSelect(),
       choices: tags,
     }),
-    image_url: fields.string({
-      widget: widgets.hidden(),
+    min_cost: fields.number({
+      required: false,
+      errorAfterField: true,
+      validators: [validators.integer(), validators.min(0)],
+    }),
+    max_cost: fields.number({
+      required: false,
+      errorAfterField: true,
+      validators: [validators.integer(), validators.min(0)],
+    }),
+    min_height: fields.number({
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label", "mt-3"],
+      },
+    }),
+    min_width: fields.number({
+      required: false,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
     }),
   });
 };

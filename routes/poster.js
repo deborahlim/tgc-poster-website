@@ -92,8 +92,23 @@ router.get("/", async (req, res) => {
           .where("tag_id", "in", form.data.tags.split(","));
       }
 
+      if (form.data.min_cost) {
+        q = q.where("cost", ">=", form.data.min_cost);
+      }
+      if (form.data.max_cost) {
+        q = q.where("cost", "<=", form.data.max_cost);
+      }
+
+      if (form.data.min_height) {
+        q = q.where("height", ">=", form.data.min_height);
+      }
+
+      if (form.data.min_width) {
+        q = q.where("width", ">=", form.data.min_width);
+      }
+
       let posters = await q.fetch({
-        withRelated: ["mediaProperty"],
+        withRelated: ["mediaProperty", "tags"],
       });
       res.render("posters/index", {
         posters: posters.toJSON(),
