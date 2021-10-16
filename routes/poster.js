@@ -28,24 +28,16 @@ const dataLayer = require("../dal/posters");
 
 router.get("/", async (req, res) => {
   // 1. get all the media properties
-  const allMediaProperties = await MediaProperty.fetchAll().map(
-    (mediaProperty) => {
-      return [mediaProperty.get("id"), mediaProperty.get("name")];
-    }
-  );
+  const allMediaProperties = await dataLayer.getMediaProperties();
   // console.log(allMediaProperties);
   // add --- to represent no categories chosen, [] as caolan form needs array of array format
   allMediaProperties.unshift([0, "----"]);
 
-  const allTags = await (
-    await Tag.fetchAll()
-  ).map((tag) => {
-    return [tag.get("id"), tag.get("name")];
-  });
+  const allTags = await dataLayer.getTags();
   // console.log(allTags);
   let searchForm = createSearchForm(allMediaProperties, allTags);
   // query builder that means SELECT * from posters. we can continue to add clauses to a query builder until we execute it with a fetch function call
-  let q = Poster.collection();
+  let q = await dataLayer.getAll();
   searchForm.handle(req, {
     empty: async (form) => {
       // when empty fetch and display all posters
@@ -120,13 +112,9 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/create", checkIfAuthenticated, async (req, res) => {
-  const allMediaProperties = await MediaProperty.fetchAll().map((property) => {
-    return [property.get("id"), property.get("name")];
-  });
+  const allMediaProperties = await dataLayer.getMediaProperties();
 
-  const allTags = await Tag.fetchAll().map((tag) => {
-    return [tag.get("id"), tag.get("name")];
-  });
+  const allTags = await dataLayer.getTags();
   const posterForm = createPosterForm(allMediaProperties, allTags);
   console.log(
     process.env.CLOUDINARY_NAME,
@@ -144,13 +132,9 @@ router.get("/create", checkIfAuthenticated, async (req, res) => {
 
 router.post("/create", checkIfAuthenticated, async (req, res) => {
   // 1. Read in all the Properties
-  const allMediaProperties = await MediaProperty.fetchAll().map((property) => {
-    return [property.get("id"), property.get("name")];
-  });
+  const allMediaProperties = await dataLayer.getMediaProperties();
 
-  const allTags = await Tag.fetchAll().map((tag) => {
-    return [tag.get("id"), tag.get("name")];
-  });
+  const allTags = await dataLayer.getTags();
   const posterForm = createPosterForm(allMediaProperties, allTags);
   posterForm.handle(req, {
     success: async (form) => {
@@ -196,19 +180,10 @@ router.post("/create", checkIfAuthenticated, async (req, res) => {
 router.get("/:poster_id/update", async (req, res) => {
   // retrieve the product
   const posterId = req.params.poster_id;
-  const poster = await Poster.where({
-    id: posterId,
-  }).fetch({
-    require: true,
-    withRelated: ["tags"],
-  });
-  const allMediaProperties = await MediaProperty.fetchAll().map((property) => {
-    return [property.get("id"), property.get("name")];
-  });
+  const poster = await dataLayer.findPoster(posterId);
+  const allMediaProperties = await dataLayer.getMediaProperties();
 
-  const allTags = await Tag.fetchAll().map((tag) => {
-    return [tag.get("id"), tag.get("name")];
-  });
+  const allTags = await dataLayer.getTags();
 
   const posterForm = createPosterForm(allMediaProperties, allTags);
 
@@ -232,12 +207,7 @@ router.get("/:poster_id/update", async (req, res) => {
 
 router.post("/:poster_id/update", async (req, res) => {
   const posterId = req.params.poster_id;
-  const poster = await Poster.where({
-    id: posterId,
-  }).fetch({
-    require: true,
-    withRelated: ["tags"],
-  });
+  const poster = await dataLayer.findPoster(posterId);
 
   const posterForm = createPosterForm();
 
@@ -273,11 +243,7 @@ router.post("/:poster_id/update", async (req, res) => {
 
 router.get("/:poster_id/delete", async (req, res) => {
   const posterId = req.params.poster_id;
-  const poster = await Poster.where({
-    id: posterId,
-  }).fetch({
-    require: true,
-  });
+  const poster = await dataLayer.findPoster(posterId);
   res.render("posters/delete", {
     poster: poster.toJSON(),
   });
@@ -285,11 +251,7 @@ router.get("/:poster_id/delete", async (req, res) => {
 
 router.post("/:poster_id/delete", async (req, res) => {
   const posterId = req.params.poster_id;
-  const poster = await Poster.where({
-    id: posterId,
-  }).fetch({
-    require: true,
-  });
+  const poster = await dataLayer.findPoster(posterId);
   await poster.destroy();
   res.redirect("/poster");
 });
