@@ -77,12 +77,14 @@ const landingRoutes = require("./routes/landing");
 const posterRoutes = require("./routes/poster");
 const userRoutes = require("./routes/users");
 const cloudinaryRoutes = require("./routes/cloudinary");
+const shoppingCartRoutes = require("./routes/shoppingCart");
 async function main() {
   // If a URL begins with a single forward slash then consult the routes registered in the landingRoutes object (which we import in from landingRoutes.js)
   app.use("/", landingRoutes);
   app.use("/poster", posterRoutes);
   app.use("/users", userRoutes);
   app.use("/cloudinary", cloudinaryRoutes);
+  app.use("/cart", shoppingCartRoutes);
 }
 
 main();

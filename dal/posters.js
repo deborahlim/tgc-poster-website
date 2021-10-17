@@ -2,6 +2,7 @@ const { Poster, MediaProperty, Tag } = require("../models");
 
 const getAll = async () => {
   let posters = await Poster.collection();
+  return posters;
 };
 
 const getMediaProperties = async () => {

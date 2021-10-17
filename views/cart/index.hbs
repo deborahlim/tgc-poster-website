@@ -1,0 +1,19 @@
+{{#extends "base"}}
+{{#block "content"}}
+<h1>My Shopping Cart</h1>
+<ul class="list-group">
+    {{#each shoppingCart}}
+    <li class="list-group-item my-3">
+                <h4>{{this.poster.name}}</h3>
+            <h5>Category: {{this.poster.category.name}}</h5>
+            <h5>Cost: {{this.poster.cost}} </h5>        
+            <h5>Quantity{{this.quantity}}</h5>   
+<div>
+                <a href="/cart/{{this.poster.id}}/remove" class="btn btn-danger">Remove</a>
+            </div>
+
+    </li>
+    {{/each}}
+</ul>
+{{/block}}
+{{/extends}}

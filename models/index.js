@@ -32,4 +32,14 @@ const User = bookshelf.model("User", {
   tableName: "users",
 });
 
-module.exports = { Poster, MediaProperty, Tag, User };
+const CartItem = bookshelf.model("CartItem", {
+  tableName: "cart_items",
+  poster() {
+    return this.belongsTo("Poster");
+  },
+  user() {
+    return this.belongsTo("User");
+  },
+});
+
+module.exports = { Poster, MediaProperty, Tag, User, CartItem };
