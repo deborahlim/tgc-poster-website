@@ -43,13 +43,14 @@
               <li class="nav-item">
                 <a class="nav-link" href="/poster/create">Add Poster</a>
               </li>
+
             </ul>
 
             <div>
               {{#if user}}
                 Hi,
                 {{user.username}}
-
+                <a href="/cart" class="mx-3 link-dark">My Cart</a>
                 <a
                   href="/users/logout"
                   class="ms-3 btn btn-primary btn-sm"

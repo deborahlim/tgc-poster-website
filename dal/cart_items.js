@@ -30,7 +30,7 @@ const createCartItem = async (userId, posterId, quantity) => {
     poster_id: posterId,
     quantity: quantity,
   });
-  await CartItem.save();
+  await cartItem.save();
   return cartItem;
 };
 
@@ -40,21 +40,20 @@ const removeFromCart = async (userId, posterId) => {
   if (cartItem) {
     await cartItem.destroy();
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 // change the quantity of an item in the user's shopping cart
 const updateQuantity = async (userId, posterId, newQuantity) => {
-  let cartItem = getCartItemByUserAndPoster(userId, posterId);
+  let cartItem = await getCartItemByUserAndPoster(userId, posterId);
+  console.log(cartItem);
   if (cartItem) {
     cartItem.set("quantity", newQuantity);
-    cartItem.save();
+    await cartItem.save();
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 module.exports = {

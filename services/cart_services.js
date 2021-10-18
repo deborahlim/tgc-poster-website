@@ -32,7 +32,7 @@ class CartServices {
   }
 
   async setQuantity(posterId, quantity) {
-    cartDataLayer.updateQuantity(this.user_id, posterId, quantity);
+    return await cartDataLayer.updateQuantity(this.user_id, posterId, quantity);
   }
 
   async getCart() {

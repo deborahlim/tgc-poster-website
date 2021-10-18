@@ -4,10 +4,18 @@
 <ul class="list-group">
     {{#each shoppingCart}}
     <li class="list-group-item my-3">
-                <h4>{{this.poster.name}}</h3>
-            <h5>Category: {{this.poster.category.name}}</h5>
+                <h4>{{this.poster.title}}</h3>
+            <h5>Media Property: {{this.poster.mediaProperty.name}}</h5>
             <h5>Cost: {{this.poster.cost}} </h5>        
-            <h5>Quantity{{this.quantity}}</h5>   
+                        <form method="POST" action="/cart/{{this.poster_id}}/quantity">
+                <input type="hidden" value="{{../csrfToken}}" name="_csrf"/> 
+                <h5>
+                    Quantity: <input type="text" name="newQuantity" value="{{this.quantity}}" style="width:30px" /> 
+                    <input type="submit" value="Update Quantity" class="btn btn-success btn-sm" />
+                                    </h5>
+            </form>
+
+  
 <div>
                 <a href="/cart/{{this.poster.id}}/remove" class="btn btn-danger">Remove</a>
             </div>
